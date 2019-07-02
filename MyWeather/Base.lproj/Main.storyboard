@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="og4-6r-CfS">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Погода-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="WeatherViewController" customModule="MyWeather" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Tmj-HP-3nF">
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="Tmj-HP-3nF" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="KnR-ld-D4c"/>
+                            <constraint firstItem="Tmj-HP-3nF" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="MsB-JB-eRr"/>
+                            <constraint firstAttribute="trailing" secondItem="Tmj-HP-3nF" secondAttribute="trailing" id="ZeM-Zj-EBN"/>
+                            <constraint firstItem="Tmj-HP-3nF" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="ZqA-df-QJy"/>
+                            <constraint firstAttribute="bottom" secondItem="Tmj-HP-3nF" secondAttribute="bottom" id="e1H-E8-K0A"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Погода" id="Sfo-bV-LeX">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="lXf-cz-Hft">
+                            <connections>
+                                <segue destination="afF-dg-uA7" kind="show" id="GKR-xU-KQi"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="tableView" destination="Tmj-HP-3nF" id="4sN-TM-4HN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-600" y="-569"/>
+        </scene>
+        <!--Добавить Город-->
+        <scene sceneID="40p-eJ-g2f">
+            <objects>
+                <viewController title="Добавить Город" id="afF-dg-uA7" customClass="AddCityViewController" customModule="MyWeather" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="iDb-Xk-Rv1">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ckj-is-YZW">
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Введите Город" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PPQ-IQ-K05">
+                                        <rect key="frame" x="97" y="219" width="220" height="30"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="yes"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QdF-jG-9GP">
+                                        <rect key="frame" x="144" y="297" width="69" height="30"/>
+                                        <state key="normal" title="Добавить"/>
+                                        <connections>
+                                            <action selector="addCityButton:" destination="afF-dg-uA7" eventType="touchUpInside" id="AG2-wj-AdU"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.89775371551513672" green="0.90826797485351562" blue="0.45518630743026733" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="QdF-jG-9GP" firstAttribute="leading" secondItem="Ckj-is-YZW" secondAttribute="leading" constant="144" id="AS3-4G-ldm"/>
+                                    <constraint firstItem="PPQ-IQ-K05" firstAttribute="top" secondItem="Ckj-is-YZW" secondAttribute="top" constant="219" id="blw-Dn-b4M"/>
+                                    <constraint firstItem="QdF-jG-9GP" firstAttribute="top" secondItem="PPQ-IQ-K05" secondAttribute="bottom" constant="48" id="ecZ-L3-aPG"/>
+                                    <constraint firstAttribute="trailing" secondItem="PPQ-IQ-K05" secondAttribute="trailing" constant="97" id="fNh-2n-KB9"/>
+                                    <constraint firstItem="PPQ-IQ-K05" firstAttribute="leading" secondItem="Ckj-is-YZW" secondAttribute="leading" constant="97" id="jLi-VF-Sfd"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="Ckj-is-YZW" secondAttribute="bottom" id="Jw1-oe-W9U"/>
+                            <constraint firstAttribute="trailing" secondItem="Ckj-is-YZW" secondAttribute="trailing" id="OPL-7w-WIK"/>
+                            <constraint firstItem="Ckj-is-YZW" firstAttribute="top" secondItem="1Ev-HV-cf1" secondAttribute="top" id="hrn-cq-UqG"/>
+                            <constraint firstItem="Ckj-is-YZW" firstAttribute="leading" secondItem="iDb-Xk-Rv1" secondAttribute="leading" id="vVd-gV-SYY"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="1Ev-HV-cf1"/>
+                    </view>
+                    <connections>
+                        <outlet property="cityLabel" destination="PPQ-IQ-K05" id="H9L-LZ-x5M"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="J7x-xG-YW4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="185.50724637681162" y="-572.54464285714278"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="IfE-WU-ZK7">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="og4-6r-CfS" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="cgB-wy-xdG">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" red="0.9082679749" green="0.65486162530000003" blue="0.27681193380000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="B23-lI-k5u"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ENP-LI-p9D" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1620" y="-569"/>
+        </scene>
+    </scenes>
+</document>
