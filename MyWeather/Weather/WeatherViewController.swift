@@ -17,6 +17,7 @@ final class WeatherViewController: UIViewController {
            tableView.reloadData()
         }
     }
+    
     var token: NotificationToken?
 
     @IBOutlet weak var tableView: UITableView!
