@@ -12,7 +12,6 @@ import RealmSwift
 
 final class WeatherViewController: UIViewController {
     
-
     private var weather = [WeatherResponse]() {
         willSet{
            tableView.reloadData()
@@ -81,11 +80,17 @@ extension WeatherViewController: UITableViewDataSource,UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: WeatherCell.weatherCellId, for: indexPath) as! WeatherCell
         let arr = weather[indexPath.row]
-        let temp = round(arr.temp)
+
+        func doubleToInteger(data:Double)-> Int {
+            let doubleToString = "\(data)"
+            let stringToInteger = (doubleToString as NSString).integerValue
+            
+            return stringToInteger
+        }
         cell.cityLabel.text = arr.nameCity
-        cell.speedLabel.text = "\(temp) M/C"
+        cell.speedLabel.text = String(arr.temp )
         cell.windLabel.text = arr.nameWeather
-        cell.tempLabel.text = "\(arr.temp) C"
+        cell.tempLabel.text = "\(doubleToInteger(data: arr.temp)) C"
         windDir(wind: arr.deg, cell: cell.directionLabel)
 
         return cell
@@ -140,7 +145,6 @@ extension WeatherViewController: UITableViewDataSource,UITableViewDelegate {
             self.tableView.reloadData()
         }
     }
-
 }
 
 extension WeatherViewController: AddCityProtocol {
