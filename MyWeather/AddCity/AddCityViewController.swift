@@ -9,26 +9,33 @@
 import UIKit
 import RealmSwift
 
-class AddCityViewController: UIViewController,UITextFieldDelegate {
+
+
+protocol AddCityProtocol {
+    func cityAdd()
+}
+
+final class AddCityViewController: UIViewController,UITextFieldDelegate {
     
     @IBOutlet weak var cityLabel: UITextField!
-    let weatherService = WeatherService()
-
+    private let weatherService = WeatherService()
     
+    var addCityDelegate: AddCityProtocol?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
         cityLabel.delegate = self
+
         
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: nil) { (nc) in
             self.view.frame.origin.y = -200
-            
-            
         }
+        
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: nil) { (nc) in
             self.view.frame.origin.y = 0.0
         }
-
+        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -37,35 +44,16 @@ class AddCityViewController: UIViewController,UITextFieldDelegate {
         }
         return true
     }
-    
 
-    
-
-    @IBAction func addCityButton(_ sender: Any) {
-
-        guard let cityName = cityLabel.text, !cityName.isEmpty else {return}
-//        weatherService.loadWeatherData(city: cityName) { [weak self] in }
-        addCity(name: cityName)
-
-
-
-        cityLabel.resignFirstResponder()
+    @IBAction func addCityBut(_ sender: UIButton) {
         
-
-    }
-    func addCity(name: String) {
-
-        let newCity = WeatherResponse()
-        newCity.nameCity = name
-        do {
-            let realm = try Realm()
-            realm.beginWrite()
-            realm.add(newCity, update: true)
-            try realm.commitWrite()
-        } catch {
-            print(error)
+        guard let cityName = cityLabel.text, !cityName.isEmpty else {
+            return
+        }
+        
+        weatherService.loadWeatherData(city: cityName) { [weak self] in
+            self?.addCityDelegate?.cityAdd()
         }
     }
-
     
 }

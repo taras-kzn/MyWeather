@@ -36,7 +36,7 @@
                     <navigationItem key="navigationItem" title="Погода" id="Sfo-bV-LeX">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="lXf-cz-Hft">
                             <connections>
-                                <segue destination="afF-dg-uA7" kind="show" id="GKR-xU-KQi"/>
+                                <segue destination="afF-dg-uA7" kind="show" identifier="addCity" id="GKR-xU-KQi"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -59,28 +59,26 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ckj-is-YZW">
                                 <rect key="frame" x="0.0" y="88" width="414" height="808"/>
                                 <subviews>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Введите Город" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PPQ-IQ-K05">
-                                        <rect key="frame" x="97" y="219" width="220" height="30"/>
+                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Введите Город" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PPQ-IQ-K05">
+                                        <rect key="frame" x="93" y="220" width="228" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="yes"/>
                                     </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QdF-jG-9GP">
-                                        <rect key="frame" x="144" y="297" width="69" height="30"/>
-                                        <state key="normal" title="Добавить"/>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QdF-jG-9GP">
+                                        <rect key="frame" x="153" y="293" width="109" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES"/>
+                                        <color key="backgroundColor" red="0.9082679749" green="0.082354655943082875" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="Добавить">
+                                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        </state>
                                         <connections>
-                                            <action selector="addCityButton:" destination="afF-dg-uA7" eventType="touchUpInside" id="AG2-wj-AdU"/>
+                                            <action selector="addCityBut:" destination="afF-dg-uA7" eventType="touchUpInside" id="lKQ-7o-8qk"/>
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" red="0.89775371551513672" green="0.90826797485351562" blue="0.45518630743026733" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstItem="QdF-jG-9GP" firstAttribute="leading" secondItem="Ckj-is-YZW" secondAttribute="leading" constant="144" id="AS3-4G-ldm"/>
-                                    <constraint firstItem="PPQ-IQ-K05" firstAttribute="top" secondItem="Ckj-is-YZW" secondAttribute="top" constant="219" id="blw-Dn-b4M"/>
-                                    <constraint firstItem="QdF-jG-9GP" firstAttribute="top" secondItem="PPQ-IQ-K05" secondAttribute="bottom" constant="48" id="ecZ-L3-aPG"/>
-                                    <constraint firstAttribute="trailing" secondItem="PPQ-IQ-K05" secondAttribute="trailing" constant="97" id="fNh-2n-KB9"/>
-                                    <constraint firstItem="PPQ-IQ-K05" firstAttribute="leading" secondItem="Ckj-is-YZW" secondAttribute="leading" constant="97" id="jLi-VF-Sfd"/>
-                                </constraints>
+                                <color key="backgroundColor" red="0.90826797485351562" green="0.73235075782970405" blue="0.20414278506121245" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

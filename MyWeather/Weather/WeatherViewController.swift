@@ -9,16 +9,19 @@
 import UIKit
 import RealmSwift
 
-class WeatherViewController: UIViewController {
+
+final class WeatherViewController: UIViewController {
     
 
-
-    
-    let weatherService = WeatherService()
-    var weather = [WeatherResponse]()
+    private var weather = [WeatherResponse]() {
+        willSet{
+           tableView.reloadData()
+        }
+    }
     var token: NotificationToken?
 
     @IBOutlet weak var tableView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -27,58 +30,49 @@ class WeatherViewController: UIViewController {
         tableView.register(UINib(nibName: "WeatherCell", bundle: nil), forCellReuseIdentifier: WeatherCell.weatherCellId )
         loadData()
         tableView.reloadData()
-
-        
-//        weatherService.loadWeatherData(city: "Москва") { [weak self] in
-////            self?.weather = weathers
-////            self?.tableView.reloadData()
-//            self?.loadData()
-//            self?.tableView.reloadData()
-//        }
-
-
-
     }
-   
 
-    func loadData() {
-
+    private func loadData() {
         do {
             let realm = try Realm()
-            
-            let weathers = realm.objects(WeatherResponse.self)
-            
+            let weathers = realm.objects(WeatherResponse.self).sorted(byKeyPath: "nameCity")
             self.weather = Array(weathers)
             token = weathers.observe { [weak self] changes in
+                
                 switch changes {
-
+                    
                 case .initial:
                     self?.tableView.reloadData()
                 case .update(_, let deletions, let insertions, let modifications):
                     self?.tableView.beginUpdates()
                     self?.tableView.performBatchUpdates({self?.tableView.insertRows(at: insertions.map({ IndexPath(row: $0, section:0 )}),with: .automatic)
-                    self?.tableView.deleteRows(at: deletions.map({ IndexPath(row:$0, section: 0 )}),with: .automatic)
-                    self?.tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0 )}),with: .automatic)
+                        self?.tableView.deleteRows(at: deletions.map({ IndexPath(row:$0, section: 0 )}),with: .automatic)
+                        self?.tableView.reloadRows(at: modifications.map({ IndexPath(row: $0, section: 0 )}),with: .automatic)
                         print(deletions,modifications,insertions)
-
+                        
                     }, completion: {_ in
                         print("update")
                     })
-                    self?.tableView.endUpdates()
                 case .error(let error):
                     print(error)
                 }
                 print("изминения прошли")
-
+                
             }
-            
         }catch{
             print("error")
-            
         }
-
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "addCity" {
+            let destinViewController = segue.destination as? AddCityViewController
+            destinViewController?.addCityDelegate = self
+        }
+    }
+    
 }
+
 extension WeatherViewController: UITableViewDataSource,UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return weather.count
@@ -87,53 +81,71 @@ extension WeatherViewController: UITableViewDataSource,UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: WeatherCell.weatherCellId, for: indexPath) as! WeatherCell
         let arr = weather[indexPath.row]
+        let temp = round(arr.temp)
         cell.cityLabel.text = arr.nameCity
-        cell.speedLabel.text = "\(arr.speed) M/C"
+        cell.speedLabel.text = "\(temp) M/C"
+        cell.windLabel.text = arr.nameWeather
+        cell.tempLabel.text = "\(arr.temp) C"
         windDir(wind: arr.deg, cell: cell.directionLabel)
 
         return cell
-        
     }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 350
-        
     }
-    func windDir(wind: Double,cell: UILabel){
-        if wind > 337.5 && wind < 22.5{
+    
+    private func windDir(wind: Double,cell: UILabel){
+        
+        switch wind {
+        case 0..<22.5:
             cell.text = "Север"
-        }else if wind > 22.5 && wind < 75 {
+        case 22.5..<75:
             cell.text = "Север-Восток"
-        }else if wind > 75 && wind < 112.5 {
+        case 75..<112.5:
             cell.text = "Восток"
-        } else if wind > 112.5 && wind < 157 {
+        case 112.5..<157:
             cell.text = "Юго-Восток"
-        } else if wind > 157 && wind < 202.5 {
+        case 157..<202.5:
             cell.text = "Юг"
-        } else if wind > 202.5 && wind < 247.5 {
+        case 202.5..<247.5:
             cell.text = "Юго-Запад"
-        } else if wind > 247.5 && wind < 292.5{
+        case 247.5..<292.5:
             cell.text = "Запад"
-        } else if wind > 292.5 && wind < 337.5{
-            cell.text = "Суверо-Запад"
+        case 292.5..<337.5:
+            cell.text = "Северо-Запад"
+        case 337.5..<360:
+            cell.text = "Север"
+        default:
+            break
         }
-        
     }
-//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//        let city = weather[indexPath.row]
-//        if editingStyle == .delete {
-//            do {
-//                let realm = try Realm()
-//                realm.beginWrite()
-//               // realm.delete(city.idCity)
-//                realm.delete(city)
-//                try realm.commitWrite()
-//            } catch {
-//                print(error)
-//                
-//            }
-//        }
-//    }
     
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        let city = weather[indexPath.row]
+        let id = city.idCity
+        if editingStyle == .delete {
+            do {
+                let realm = try Realm()
+                let del = realm.objects(WeatherResponse.self).filter("idCity == %@", id)
+                realm.beginWrite()
+                realm.delete(del)
+                try realm.commitWrite()
+            } catch {
+                print(error)
+                
+            }
+            loadData()
+            self.tableView.reloadData()
+        }
+    }
 
+}
+
+extension WeatherViewController: AddCityProtocol {
     
+    func cityAdd() {
+        loadData()
+    }
 }

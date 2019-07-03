@@ -8,13 +8,13 @@
 
 import UIKit
 
-class WeatherCell: UITableViewCell {
-    
-    
-    @IBOutlet weak var cityLabel: UILabel!
+final class WeatherCell: UITableViewCell {
     
     static let weatherCellId = "WeatherCell"
-
+    
+    @IBOutlet weak var tempLabel: UILabel!
+    @IBOutlet weak var windLabel: UILabel!
+    @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var directionLabel: UILabel!
     @IBOutlet weak var speedLabel: UILabel!
     
