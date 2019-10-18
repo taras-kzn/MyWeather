@@ -31,9 +31,9 @@ final class WeatherService{
         Alamofire.request(url, method: .get, parameters: parametrs).responseData { [weak self] response in
             guard let data = response.value else {return}
 
-            let weather = try? JSONDecoder().decode(WeatherResponse.self,from: data)
-            weather?.nameCity = city
-            self?.saveWeatherData([weather!], idCity: weather!.idCity, nameCity: weather!.nameCity)
+            guard let weather = try? JSONDecoder().decode(WeatherResponse.self,from: data) else {return}
+            
+            self?.saveWeatherData([weather], idCity: weather.idCity, nameCity: weather.nameCity)
             completion()
         }
     }
@@ -48,7 +48,6 @@ final class WeatherService{
             realm.add(weather)
             try realm.commitWrite()
             print(realm.configuration.fileURL)
- 
         } catch  {
             print(error)
         }

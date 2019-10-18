@@ -18,21 +18,49 @@ final class WeatherViewController: UIViewController {
         }
     }
     
+    private let getService = WeatherService()
     var token: NotificationToken?
+    var myFreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refresh(sender:index:)), for: .valueChanged)
+        return refreshControl
+    }()
 
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.refreshControl = myFreshControl
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UINib(nibName: "WeatherCell", bundle: nil), forCellReuseIdentifier: WeatherCell.weatherCellId )
         loadData()
         tableView.reloadData()
     }
+    
+    @objc func refresh(sender: UIRefreshControl,index: IndexPath){
+        //let arr = weather[index.row]
+        getService.loadWeatherData(city: "Москва") { [weak self] in
+            self?.loadData()
+            self?.tableView.reloadData()
+        }
+//            do {
+//                let realm = try Realm()
+//                let del = realm.objects(WeatherResponse.self).filter("nameCity == %@", arr.nameCity)
+//                realm.beginWrite()
+//                realm.delete(del)
+//                try realm.commitWrite()
+//            } catch {
+//                print(error)
+//
+//            }
+//            loadData()
+//        self.tableView.reloadData()
+            sender.endRefreshing()
+    }
 
-    private func loadData() {
+    func loadData() {
         do {
             let realm = try Realm()
             let weathers = realm.objects(WeatherResponse.self).sorted(byKeyPath: "nameCity")
