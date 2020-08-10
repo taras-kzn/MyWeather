@@ -10,65 +10,63 @@ import UIKit
 import RealmSwift
 
 
+enum WindDirection: String {
+    case north = "Север"
+    case northeast = "Север-Восток"
+    case east = "Восток"
+    case southeast = "Юго-Восток"
+    case south = "Юг"
+    case southwest = "Юго-Запад"
+    case west = "Запад"
+    case northwest = "Северо-Запад"
+}
+
 final class WeatherViewController: UIViewController {
-    
+    //MARK: - IBOutlet
+    @IBOutlet weak var tableView: UITableView!
+    //MARK: - Properties
+    private let getService = WeatherService()
+    var token: NotificationToken?
+    private let tableNibName = "WeatherCell"
     private var weather = [WeatherResponse]() {
         willSet{
            tableView.reloadData()
         }
     }
-    
-    private let getService = WeatherService()
-    var token: NotificationToken?
     var myFreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refresh(sender:index:)), for: .valueChanged)
         return refreshControl
     }()
-
-    @IBOutlet weak var tableView: UITableView!
-    
+    //MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.refreshControl = myFreshControl
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(UINib(nibName: "WeatherCell", bundle: nil), forCellReuseIdentifier: WeatherCell.weatherCellId )
+        tableView.register(UINib(nibName: tableNibName, bundle: nil), forCellReuseIdentifier: WeatherCell.weatherCellId )
         loadData()
         tableView.reloadData()
     }
-    
+    //MARK: - Functions
     @objc func refresh(sender: UIRefreshControl,index: IndexPath){
-        //let arr = weather[index.row]
         getService.loadWeatherData(city: "Москва") { [weak self] in
             self?.loadData()
             self?.tableView.reloadData()
         }
-//            do {
-//                let realm = try Realm()
-//                let del = realm.objects(WeatherResponse.self).filter("nameCity == %@", arr.nameCity)
-//                realm.beginWrite()
-//                realm.delete(del)
-//                try realm.commitWrite()
-//            } catch {
-//                print(error)
-//
-//            }
-//            loadData()
-//        self.tableView.reloadData()
             sender.endRefreshing()
     }
 
     func loadData() {
         do {
             let realm = try Realm()
-            let weathers = realm.objects(WeatherResponse.self).sorted(byKeyPath: "nameCity")
+            let nameByKeyPath = "nameCity"
+            let weathers = realm.objects(WeatherResponse.self).sorted(byKeyPath: nameByKeyPath)
             self.weather = Array(weathers)
             token = weathers.observe { [weak self] changes in
                 
                 switch changes {
-                    
                 case .initial:
                     self?.tableView.reloadData()
                 case .update(_, let deletions, let insertions, let modifications):
@@ -82,10 +80,9 @@ final class WeatherViewController: UIViewController {
                         print("update")
                     })
                 case .error(let error):
-                    print(error)
+                    print(error.localizedDescription)
                 }
                 print("изминения прошли")
-                
             }
         }catch{
             print("error")
@@ -93,29 +90,32 @@ final class WeatherViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "addCity" {
+        let identifier = "addCity"
+        if segue.identifier == identifier {
             let destinViewController = segue.destination as? AddCityViewController
             destinViewController?.addCityDelegate = self
         }
     }
-    
 }
-
+//MARK: - TableViewDataSource, TableViewDelegate
 extension WeatherViewController: UITableViewDataSource,UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return weather.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: WeatherCell.weatherCellId, for: indexPath) as! WeatherCell
+        let tableCell = tableView.dequeueReusableCell(withIdentifier: WeatherCell.weatherCellId, for: indexPath) as? WeatherCell
+        guard let cell = tableCell else {
+            return UITableViewCell()
+        }
         let arr = weather[indexPath.row]
 
         func doubleToInteger(data:Double)-> Int {
             let doubleToString = "\(data)"
             let stringToInteger = (doubleToString as NSString).integerValue
-            
             return stringToInteger
         }
+        
         cell.cityLabel.text = arr.nameCity
         cell.speedLabel.text = String(arr.temp )
         cell.windLabel.text = arr.nameWeather
@@ -133,23 +133,23 @@ extension WeatherViewController: UITableViewDataSource,UITableViewDelegate {
         
         switch wind {
         case 0..<22.5:
-            cell.text = "Север"
+            cell.text = WindDirection.north.rawValue
         case 22.5..<75:
-            cell.text = "Север-Восток"
+            cell.text = WindDirection.northeast.rawValue
         case 75..<112.5:
-            cell.text = "Восток"
+            cell.text = WindDirection.east.rawValue
         case 112.5..<157:
-            cell.text = "Юго-Восток"
+            cell.text = WindDirection.southeast.rawValue
         case 157..<202.5:
-            cell.text = "Юг"
+            cell.text = WindDirection.south.rawValue
         case 202.5..<247.5:
-            cell.text = "Юго-Запад"
+            cell.text = WindDirection.southwest.rawValue
         case 247.5..<292.5:
-            cell.text = "Запад"
+            cell.text = WindDirection.west.rawValue
         case 292.5..<337.5:
-            cell.text = "Северо-Запад"
+            cell.text = WindDirection.northwest.rawValue
         case 337.5..<360:
-            cell.text = "Север"
+            cell.text = WindDirection.north.rawValue
         default:
             break
         }
@@ -175,9 +175,8 @@ extension WeatherViewController: UITableViewDataSource,UITableViewDelegate {
         }
     }
 }
-
+//MARK: - extension AddCityProtocol
 extension WeatherViewController: AddCityProtocol {
-    
     func cityAdd() {
         loadData()
     }
