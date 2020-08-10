@@ -12,14 +12,14 @@ import RealmSwift
 
 
 final class WeatherResponse: Object, Decodable {
-    
+    //MARK: - Properties
     @objc dynamic var nameCity = ""
     @objc dynamic var nameWeather = ""
     @objc dynamic var speed = 0.0
     @objc dynamic var temp = 0.0
     @objc dynamic var deg = 0.0
     @objc dynamic var idCity = 0.0
-    
+    //MARK: - Private enums
     private enum CodingKeys: String,CodingKey{
         case weather
         case main
@@ -38,7 +38,7 @@ final class WeatherResponse: Object, Decodable {
         case speed
         case deg
     }
-    
+    //MARK: - Init
     convenience required init(from decoder: Decoder) throws {
         self.init()
         
@@ -53,9 +53,7 @@ final class WeatherResponse: Object, Decodable {
         self.deg = try windValues?.decode(Double.self, forKey: .deg) ?? 0.0
         self.idCity = try values?.decode(Double.self, forKey: .id) ?? 0.0
         self.nameCity = try values?.decode(String.self, forKey: .name) ?? ""
-      
     }
-    
 }
 
 

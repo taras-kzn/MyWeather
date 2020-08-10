@@ -9,17 +9,20 @@
 import UIKit
 
 final class WeatherCell: UITableViewCell {
-    
-    static let weatherCellId = "WeatherCell"
-    
+    //MARK: - IBOutlet
     @IBOutlet weak var tempLabel: UILabel!
     @IBOutlet weak var windLabel: UILabel!
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var directionLabel: UILabel!
     @IBOutlet weak var speedLabel: UILabel!
-    
-    
+    //MARK: - lifeCycle
     override func awakeFromNib() {
         super.awakeFromNib()
+    }
+}
+
+extension WeatherCell {
+    static var weatherCellId: String {
+        return String(describing: "WeatherCell")
     }
 }

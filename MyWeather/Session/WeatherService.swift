@@ -11,10 +11,10 @@ import Alamofire
 import RealmSwift
 
 final class WeatherService{
-    
+    //MARK: - Properties
     private let baseUrl = "http://api.openweathermap.org"
     private let apiKey = "92cabe9523da26194b02974bfcd50b7e"
-    
+    //MARK: - Functions
     func loadWeatherData(city: String, completion: @escaping () -> Void ){
         
         let path = "/data/2.5/weather"
@@ -39,7 +39,6 @@ final class WeatherService{
     }
     
     private func saveWeatherData(_ weather: [WeatherResponse], idCity: Double, nameCity: String){
- 
         do {
             let realm = try Realm()
             let oldWeayhers = realm.objects(WeatherResponse.self).filter("idCity == %@", idCity)
@@ -52,5 +51,4 @@ final class WeatherService{
             print(error)
         }
     }
-    
 }
